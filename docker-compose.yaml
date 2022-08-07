@@ -1,0 +1,55 @@
+---
+version: "3.4"
+services:
+  promtheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.35.0
+    command: [
+      "--config.file=/etc/prometheus/prometheus.yml",
+      "--storage.tsdb.path=/prometheus",
+      "--web.console.libraries=/usr/share/prometheus/console_libraries",
+      "--web.console.templates=/usr/share/prometheus/consoles",
+      "--storage.tsdb.retention.time=90d"
+    ]
+    restart: unless-stopped
+    volumes:
+      - prometheus:/prometheus
+      - ./prometheus:/etc/prometheus
+    network_mode: host
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10M"
+        max-file: "1"
+    
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-oss:8.5.2
+    restart: unless-stopped
+    volumes:
+      - grafana:/var/lib/grafana
+      - ./grafana:/etc/grafana
+    network_mode: host
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10M"
+        max-file: "1"
+        
+  snmp-exporter:
+    container_name: snmp-exporter
+    image: prom/snmp-exporter:v0.20.0
+    network_mode: host
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10M"
+        max-file: "1"
+        
+volumes:
+  grafana:
+  prometheus:
+
