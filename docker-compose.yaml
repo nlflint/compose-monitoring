@@ -1,7 +1,7 @@
 ---
 version: "3.4"
 services:
-  promtheus:
+  prometheus:
     container_name: prometheus
     image: prom/prometheus:v2.35.0
     command: [
